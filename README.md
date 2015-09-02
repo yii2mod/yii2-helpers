@@ -1,2 +1,2 @@
-# yii2-helpers
-Collection of useful helper functions for Yii Framework 2.0
+# Yii2 Helpers
+This extension is a collection of useful helper functions for Yii Framework 2.0.
