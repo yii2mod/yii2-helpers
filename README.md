@@ -57,3 +57,7 @@ Usage
       });
 ```
 * ```ArrayHelper::average($array);``` - Return AVERAGE of the values in your array
+ 
+#####StringHelper
+* ```StringHelper::removeStopWords();``` - remove stop words from string
+* ```StringHelper::removePunctuationSymbols();``` - Remove punctuation symbols from string
