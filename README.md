@@ -22,7 +22,6 @@ to the require section of your `composer.json` file.
 
 Usage
 -----
-#####ArrayHelper
 **```ArrayHelper::add($array, $key, $value)```**
 
 Add a given key / value pair to the array if the given key doesn't already exist in the array:
@@ -169,6 +168,7 @@ $value = ArrayHelper::where($array, function($key, $value) {
 
 Convert xml string to array.
 
-#####StringHelper
+
+####StringHelper
 * ```StringHelper::removeStopWords();``` - remove stop words from string
 * ```StringHelper::removePunctuationSymbols();``` - Remove punctuation symbols from string
