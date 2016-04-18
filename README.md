@@ -26,13 +26,8 @@ Usage
 
 Add a given key / value pair to the array if the given key doesn't already exist in the array:
 ```php
-$array = [100, 200, 300];
-
-$value = array_first($array, function ($key, $value) {
-    return $value >= 150;
-});
-
-// 200
+$array = ArrayHelper::add(['card' => 'Visa'], 'price', 200);
+// ['card' => 'Visa', 'price' => 200]
 ```
 ------
 
