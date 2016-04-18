@@ -20,9 +20,24 @@ or add
 
 to the require section of your `composer.json` file.
 
-Usage
------
-**```ArrayHelper::add($array, $key, $value)```**
+Available Methods
+-------------------
+1. **[add()](#add)**
+2. **[collapse()](#collapse)**
+3. **[except()](#except)**
+4. **[has()](#has)**
+5. **[first()](#first)**
+6. **[flatten()](#flatten)**
+7. **[last()](#last)**
+8. **[only()](#only)**
+9. **[prepend()](#prepend)**
+10. **[pull()](#pull)**
+11. **[where()](#where)**
+12. **[xmlStrToArray()](#xmlstrtoarray)**
+
+Method Listing
+-------------------
+#####```ArrayHelper::add($array, $key, $value)```
 
 Add a given key / value pair to the array if the given key doesn't already exist in the array:
 ```php
@@ -31,7 +46,7 @@ $array = ArrayHelper::add(['card' => 'Visa'], 'price', 200);
 ```
 ------
 
-**```ArrayHelper::collapse($array)```**
+#####```ArrayHelper::collapse($array)```
 
 Collapse an array of arrays into a single array:
 ```php
@@ -43,7 +58,7 @@ $array = ArrayHelper::except($array, ['price']);
 ```
 ------
 
-**```ArrayHelper::except($array, $keys)```**
+#####```ArrayHelper::except($array, $keys)```
 
 Get all of the given array except for a specified array of items:
 ```php
@@ -55,7 +70,7 @@ $array = ArrayHelper::except($array, ['price']);
 ```
 ------
 
-**```ArrayHelper::has($array, $key)```**
+#####```ArrayHelper::has($array, $key)```
 
 Check if an item exists in an array using "dot" notation:
 ```php
@@ -67,7 +82,7 @@ $hasDesk = ArrayHelper::has($array, 'products.desk');
 ```
 ------
 
-**```ArrayHelper::first($array, $callback = null, $default = null)```**
+#####```ArrayHelper::first($array, $callback = null, $default = null)```
 
 Return the first element in an array passing a given truth test:
 ```php
@@ -82,7 +97,7 @@ $value = ArrayHelper::first($array, function($key, $value) {
 ```
 ------
 
-**```ArrayHelper::flatten($array, $depth = INF)```**
+#####```ArrayHelper::flatten($array, $depth = INF)```
 
 Flatten a multi-dimensional array into a single level:
 ```php
@@ -94,7 +109,7 @@ $array = ArrayHelper::flatten($array);
 ```
 ------
 
-**```ArrayHelper::last($array, $callback = null, $default = null)```**
+#####```ArrayHelper::last($array, $callback = null, $default = null)```
 
 Return the last element in an array passing a given truth test:
 ```php
@@ -109,7 +124,7 @@ $value = ArrayHelper::last($array, function($key, $value) {
 ```
 ------
 
-**```ArrayHelper::only($array, $keys)```**
+#####```ArrayHelper::only($array, $keys)```
 
 Get a subset of the items from the given array:
 ```php
@@ -121,7 +136,7 @@ $array = ArrayHelper::only($array, ['name', 'price']);
 ```
 ------
 
-**```ArrayHelper::prepend($array, $value, $key = null)```**
+#####```ArrayHelper::prepend($array, $value, $key = null)```
 
 Push an item onto the beginning of an array:
 ```php
@@ -133,7 +148,7 @@ $array = ArrayHelper::prepend($array, 'zero');
 ```
 ------
 
-**```ArrayHelper::pull(&$array, $key, $default = null)```**
+#####```ArrayHelper::pull(&$array, $key, $default = null)```
 
 Get a value from the array, and remove it:
 ```php
@@ -147,7 +162,7 @@ $name = ArrayHelper::pull($array, 'name');
 ```
 ------
 
-**```ArrayHelper::where($array, Closure $callback)```**
+#####```ArrayHelper::where($array, Closure $callback)```
 
 Filter the array using the given Closure.:
 ```php
@@ -159,7 +174,7 @@ $value = ArrayHelper::where($array, function($key, $value) {
 ```
 ------
 
-**```ArrayHelper::xmlStrToArray($xmlString, $tagName = false, $elementCount = false);```**
+###```ArrayHelper::xmlStrToArray($xmlString, $tagName = false, $elementCount = false);```
 
 Convert xml string to array.
 
