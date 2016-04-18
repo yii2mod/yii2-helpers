@@ -172,7 +172,7 @@ $value = ArrayHelper::where($array, function($key, $value) {
 ```
 ------
 
-###```xmlStrToArray();```
+###```xmlStrToArray()```
 
 Convert xml string to array.
 
