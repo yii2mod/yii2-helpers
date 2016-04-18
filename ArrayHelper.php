@@ -286,10 +286,7 @@ class ArrayHelper extends BaseArrayHelper
      */
     public static function value($value)
     {
-        if ($value instanceof Closure) {
-            call_user_func($value);
-        }
-        return $value;
+        return $value instanceof Closure ? $value() : $value;
     }
 
     /**
