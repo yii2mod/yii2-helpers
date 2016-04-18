@@ -2,8 +2,13 @@
 
 namespace yii2mod\helpers;
 
+use ArrayAccess;
 use Closure;
+use DOMDocument;
+use DOMNode;
+use Exception;
 use yii\helpers\ArrayHelper as BaseArrayHelper;
+use yii2mod\collection\Collection;
 
 /**
  * ArrayHelper provides additional array functionality that you can use in your application.
@@ -12,138 +17,61 @@ class ArrayHelper extends BaseArrayHelper
 {
 
     /**
-     * Return the first element in an array passing a given truth test.
-     * ~~~
-     *   $array = [100, 200, 300];
-     *   $value = ArrayHelper::first($array, function($key, $value) {
-     *        return $value >= 150; // Will be return 200;
-     *   });
-     * ~~~
-     * @param  array $array
-     * @param  \Closure $callback
-     * @param  mixed $default
-     * @return mixed
-     */
-    public static function first($array, $callback, $default = null)
-    {
-        foreach ($array as $key => $value) {
-            if (call_user_func($callback, $key, $value)) return $value;
-        }
-        return static::value($default);
-    }
-
-    /**
-     * Return the last element in an array passing a given truth test.
-     * ~~~
-     *   $array = [100, 200, 300];
-     *   $value = ArrayHelper::last($array, function($key, $value) {
-     *        return $value; // Will be return 300;
-     *   });
-     * ~~~
-     * @param $array
-     * @param $callback
-     * @param null $default
-     * @return mixed
-     */
-    public static function last($array, $callback, $default = null)
-    {
-        $array = array_reverse($array);
-
-        foreach ($array as $key => $value) {
-            if (call_user_func($callback, $key, $value)) {
-                return $value;
-            }
-        }
-
-        return static::value($default);
-    }
-
-    /**
-     * Filter the array using the given Closure.
+     * Determine whether the given value is array accessible.
      *
-     * ~~~
-     *   $array = ["100", 200, "300"];
-     *   $value = ArrayHelper::where($array, function($key, $value) {
-     *        return is_string($value);
-     *   });
-     *   // Will be return Array ( [0] => 100 [2] => 300 );
-     * ~~~
+     * @param  mixed $value
+     * @return bool
+     */
+    public static function accessible($value)
+    {
+        return is_array($value) || $value instanceof ArrayAccess;
+    }
+
+    /**
+     * Add an element to an array using "dot" notation if it doesn't exist.
+     *
      * @param  array $array
-     * @param  \Closure $callback
+     * @param  string $key
+     * @param  mixed $value
      * @return array
      */
-    public static function where($array, \Closure $callback)
+    public static function add($array, $key, $value)
     {
-        $filtered = [];
-        foreach ($array as $key => $value) {
-            if (call_user_func($callback, $key, $value)) $filtered[$key] = $value;
+        if (is_null(static::getValue($array, $key))) {
+            static::set($array, $key, $value);
         }
-        return $filtered;
+
+        return $array;
     }
 
     /**
-     * @param $value
-     * @return mixed
-     */
-    public static function value($value)
-    {
-        if ($value instanceof \Closure) {
-            call_user_func($value);
-        }
-        return $value;
-    }
-
-    /**
-     * Get array value by key recursive
+     * Collapse an array of arrays into a single array.
      *
-     * @param $needle
-     * @param array $haystack
-     * @return array|mixed
-     */
-    public static function getArrayValueRecursive($needle, array $haystack)
-    {
-        $result = [];
-        array_walk_recursive($haystack, function ($value, $key) use ($needle, &$result) {
-            if ($key === $needle) array_push($result, $value);
-        });
-        return count($result) > 1 ? $result : array_pop($result);
-    }
-
-    /**
-     * @param $xmlString
-     * @param bool $tagName
-     * @param bool $elementCount
+     * @param  array $array
      * @return array
      */
-    public static function xmlStrToArray($xmlString, $tagName = false, $elementCount = false)
+    public static function collapse($array)
     {
-        $doc = new \DOMDocument();
-        try {
-            $doc->loadXML($xmlString);
-        } catch (\Exception $exc) {
-            return false;
-        }
-        $result = [];
+        $results = [];
 
-        if (is_string($tagName)) {
-            $nodes = $doc->documentElement->getElementsByTagName($tagName);
-            if (false == $elementCount) {
-                $elementCount = $nodes->length;
+        foreach ($array as $values) {
+            if ($values instanceof Collection) {
+                $values = $values->all();
+            } elseif (!is_array($values)) {
+                continue;
             }
-            for ($i = 0; $i < $elementCount; $i++) {
-                $result[] = self::domNodeToArray($nodes->item($i));
-            }
-        } else {
-            $result = self::domNodeToArray($doc->documentElement);
+
+            $results = array_merge($results, $values);
         }
-        return $result;
+
+        return $results;
     }
 
     /**
-     * @param \DOMNode $node
+     * @param DOMNode $node
      * @return array|string
      */
-    protected static function domNodeToArray(\DOMNode $node)
+    protected static function domNodeToArray(DOMNode $node)
     {
         $output = array();
         if (!isset($node->nodeType)) return $output;
@@ -188,55 +116,312 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
-     * Implements `array_sort` from laravel framework
-     * Usage
-     * $array = array(
-     *       array('totalMatchPercent' => 10),
-     *       array('totalMatchPercent' => 45),
-     * );
-     * ~~~
-     *    $array = ArrayHelper::sort($result, function ($value) {
-     *           return $value['totalMatchPercent'];
-     *    });
-     * ~~~
-     * @param $items
-     * @param Closure $callback
-     * @param int $options
-     * @param bool|true $descending
+     * Get all of the given array except for a specified array of items.
+     *
+     * @param  array $array
+     * @param  array|string $keys
      * @return array
      */
-    public static function sort($items, Closure $callback, $descending = true, $options = SORT_REGULAR)
+    public static function except($array, $keys)
     {
-        $results = [];
-        /**
-         * First we will loop through the items and get the comparator from a callback
-         * function which we were given. Then, we will sort the returned values
-         * and grab the corresponding values for the sorted keys from this array.
-         */
-        foreach ($items as $key => $value) {
-            $results[$key] = $callback($value);
-        }
-        $descending ? arsort($results, $options) : asort($results, $options);
-        /**
-         * Once we have sorted all of the keys in the array, we will loop through them
-         * and grab the corresponding model so we can set the underlying items list
-         * to the sorted version. Then we'll just return the collection instance.
-         */
-        foreach (array_keys($results) as $key) {
-            $results[$key] = $items[$key];
-        }
+        static::forget($array, $keys);
 
-        return $results;
+        return $array;
     }
 
     /**
-     * Return AVERAGE of the values in your array
-     * @param $array
-     * @return float
+     * Remove one or many array items from a given array using "dot" notation.
+     *
+     * @param  array $array
+     * @param  array|string $keys
+     * @return void
      */
-    public static function average($array)
+    public static function forget(&$array, $keys)
     {
-        return round(array_sum($array) / count($array));
+        $original = &$array;
+
+        $keys = (array)$keys;
+
+        if (count($keys) === 0) {
+            return;
+        }
+
+        foreach ($keys as $key) {
+            $parts = explode('.', $key);
+
+            // clean up before each pass
+            $array = &$original;
+
+            while (count($parts) > 1) {
+                $part = array_shift($parts);
+
+                if (isset($array[$part]) && is_array($array[$part])) {
+                    $array = &$array[$part];
+                } else {
+                    continue 2;
+                }
+            }
+
+            unset($array[array_shift($parts)]);
+        }
+    }
+
+    /**
+     * Check if an item exists in an array using "dot" notation.
+     *
+     * @param  \ArrayAccess|array $array
+     * @param  string $key
+     * @return bool
+     */
+    public static function has($array, $key)
+    {
+        if (!$array) {
+            return false;
+        }
+
+        if (is_null($key)) {
+            return false;
+        }
+
+        if (static::keyExists($key, $array)) {
+            return true;
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if (static::accessible($array) && static::keyExists($segment, $array)) {
+                $array = $array[$segment];
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Return the first element in an array passing a given truth test.
+     * ~~~
+     *   $array = [100, 200, 300];
+     *   $value = ArrayHelper::first($array, function($key, $value) {
+     *        return $value >= 150; // Will be return 200;
+     *   });
+     * ~~~
+     * @param  array $array
+     * @param  Closure $callback
+     * @param  mixed $default
+     * @return mixed
+     */
+    public static function first($array, $callback = null, $default = null)
+    {
+        if (is_null($callback)) {
+            return empty($array) ? static::value($default) : reset($array);
+        }
+
+        foreach ($array as $key => $value) {
+            if (call_user_func($callback, $key, $value)) {
+                return $value;
+            }
+        }
+        return static::value($default);
+    }
+
+    /**
+     * Flatten a multi-dimensional array into a single level.
+     *
+     * @param  array $array
+     * @param  int $depth
+     * @return array
+     */
+    public static function flatten($array, $depth = INF)
+    {
+        $result = [];
+
+        foreach ($array as $item) {
+            $item = $item instanceof Collection ? $item->all() : $item;
+
+            if (is_array($item)) {
+                if ($depth === 1) {
+                    $result = array_merge($result, $item);
+                    continue;
+                }
+
+                $result = array_merge($result, static::flatten($item, $depth - 1));
+                continue;
+            }
+
+            $result[] = $item;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return the last element in an array passing a given truth test.
+     * ~~~
+     *   $array = [100, 200, 300];
+     *   $value = ArrayHelper::last($array, function($key, $value) {
+     *        return $value; // Will be return 300;
+     *   });
+     * ~~~
+     * @param $array
+     * @param $callback
+     * @param null $default
+     * @return mixed
+     */
+    public static function last($array, $callback = null, $default = null)
+    {
+        if (is_null($callback)) {
+            return empty($array) ? static::value($default) : end($array);
+        }
+
+        return static::first(array_reverse($array), $callback, $default);
+    }
+
+
+    /**
+     * Get a subset of the items from the given array.
+     *
+     * @param  array $array
+     * @param  array|string $keys
+     * @return array
+     */
+    public static function only($array, $keys)
+    {
+        return array_intersect_key($array, array_flip((array)$keys));
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public static function value($value)
+    {
+        if ($value instanceof Closure) {
+            call_user_func($value);
+        }
+        return $value;
+    }
+
+    /**
+     * Push an item onto the beginning of an array.
+     *
+     * @param  array $array
+     * @param  mixed $value
+     * @param  mixed $key
+     * @return array
+     */
+    public static function prepend($array, $value, $key = null)
+    {
+        if (is_null($key)) {
+            array_unshift($array, $value);
+        } else {
+            $array = [$key => $value] + $array;
+        }
+
+        return $array;
+    }
+
+    /**
+     * Get a value from the array, and remove it.
+     *
+     * @param  array $array
+     * @param  string $key
+     * @param  mixed $default
+     * @return mixed
+     */
+    public static function pull(&$array, $key, $default = null)
+    {
+        $value = static::getValue($array, $key, $default);
+
+        static::forget($array, $key);
+
+        return $value;
+    }
+
+    /**
+     * Set an array item to a given value using "dot" notation.
+     *
+     * If no key is given to the method, the entire array will be replaced.
+     *
+     * @param  array $array
+     * @param  string $key
+     * @param  mixed $value
+     * @return array
+     */
+    public static function set(&$array, $key, $value)
+    {
+        if (is_null($key)) {
+            return $array = $value;
+        }
+
+        $keys = explode('.', $key);
+
+        while (count($keys) > 1) {
+            $key = array_shift($keys);
+
+            // If the key doesn't exist at this depth, we will just create an empty array
+            // to hold the next value, allowing us to create the arrays to hold final
+            // values at the correct depth. Then we'll keep digging into the array.
+            if (!isset($array[$key]) || !is_array($array[$key])) {
+                $array[$key] = [];
+            }
+
+            $array = &$array[$key];
+        }
+
+        $array[array_shift($keys)] = $value;
+
+        return $array;
+    }
+
+    /**
+     * Filter the array using the given Closure.
+     *
+     * @param  array $array
+     * @param  Closure $callback
+     * @return array
+     */
+    public static function where($array, Closure $callback)
+    {
+        $filtered = [];
+
+        foreach ($array as $key => $value) {
+            if (call_user_func($callback, $key, $value)) {
+                $filtered[$key] = $value;
+            }
+        }
+
+        return $filtered;
+    }
+
+    /**
+     * @param $xmlString
+     * @param bool $tagName
+     * @param bool $elementCount
+     * @return array
+     */
+    public static function xmlStrToArray($xmlString, $tagName = false, $elementCount = false)
+    {
+        $doc = new DOMDocument();
+        try {
+            $doc->loadXML($xmlString);
+        } catch (Exception $exc) {
+            return false;
+        }
+        $result = [];
+
+        if (is_string($tagName)) {
+            $nodes = $doc->documentElement->getElementsByTagName($tagName);
+            if (false == $elementCount) {
+                $elementCount = $nodes->length;
+            }
+            for ($i = 0; $i < $elementCount; $i++) {
+                $result[] = self::domNodeToArray($nodes->item($i));
+            }
+        } else {
+            $result = self::domNodeToArray($doc->documentElement);
+        }
+        return $result;
     }
 
 }
