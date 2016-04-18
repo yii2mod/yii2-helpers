@@ -200,12 +200,7 @@ class ArrayHelper extends BaseArrayHelper
 
     /**
      * Return the first element in an array passing a given truth test.
-     * ~~~
-     *   $array = [100, 200, 300];
-     *   $value = ArrayHelper::first($array, function($key, $value) {
-     *        return $value >= 150; // Will be return 200;
-     *   });
-     * ~~~
+     *
      * @param  array $array
      * @param  Closure $callback
      * @param  mixed $default
@@ -257,12 +252,7 @@ class ArrayHelper extends BaseArrayHelper
 
     /**
      * Return the last element in an array passing a given truth test.
-     * ~~~
-     *   $array = [100, 200, 300];
-     *   $value = ArrayHelper::last($array, function($key, $value) {
-     *        return $value; // Will be return 300;
-     *   });
-     * ~~~
+     *
      * @param $array
      * @param $callback
      * @param null $default
