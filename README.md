@@ -50,11 +50,9 @@ $array = ArrayHelper::add(['card' => 'Visa'], 'price', 200);
 
 Collapse an array of arrays into a single array:
 ```php
-$array = ['name' => 'Desk', 'price' => 100];
+$array = ArrayHelper::collapse([[1, 2, 3], [4, 5, 6]]);
 
-$array = ArrayHelper::except($array, ['price']);
-
-// ['name' => 'Desk']
+// [1, 2, 3, 4, 5, 6]
 ```
 ------
 
