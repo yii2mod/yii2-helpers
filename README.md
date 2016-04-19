@@ -23,17 +23,21 @@ to the require section of your `composer.json` file.
 Available Methods
 -------------------
 1. **[add()](#add)**
-2. **[collapse()](#collapse)**
-3. **[except()](#except)**
-4. **[has()](#has)**
-5. **[first()](#first)**
-6. **[flatten()](#flatten)**
-7. **[last()](#last)**
-8. **[only()](#only)**
-9. **[prepend()](#prepend)**
-10. **[pull()](#pull)**
-11. **[where()](#where)**
-12. **[xmlStrToArray()](#xmlstrtoarray)**
+2. **[average()](#average)**
+3. **[collapse()](#collapse)**
+4. **[except()](#except)**
+5. **[has()](#has)**
+6. **[first()](#first)**
+7. **[flatten()](#flatten)**
+8. **[last()](#last)**
+9. **[only()](#only)**
+10. **[prepend()](#prepend)**
+11. **[pull()](#pull)**
+12. **[set()](#set)**
+13. **[sort()](#sort)**
+14. **[sortRecursive()](#sortrecursive)**
+15. **[where()](#where)**
+16. **[xmlStrToArray()](#xmlstrtoarray)**
 
 Method Listing
 -------------------
@@ -45,6 +49,30 @@ $array = ArrayHelper::add(['card' => 'Visa'], 'price', 200);
 // ['card' => 'Visa', 'price' => 200]
 ```
 ------
+
+#####```average()```
+
+Get the average value of a given key:
+```php
+ArrayHelper::average([1, 2, 3, 4, 5]);
+// 3
+```
+
+You may also pass a key to the average method:
+
+```php
+$array = [
+   ['score' => 10],
+   ['score' => 30],
+   ['score' => 50],
+];
+
+ArrayHelper::average($array, 'score');
+
+// 30
+```
+------
+
 
 #####```collapse()```
 
@@ -160,6 +188,74 @@ $name = ArrayHelper::pull($array, 'name');
 ```
 ------
 
+#####```set()```
+
+Set an array item to a given value using "dot" notation:
+```php
+$array = ['products' => ['desk' => ['price' => 100]]];
+
+ArrayHelper::set($array, 'products.desk.price', 200);
+
+// ['products' => ['desk' => ['price' => 200]]]
+```
+------
+
+#####```sort()```
+
+Sort the array using the given callback:
+```php
+$array = [
+    ['name' => 'Desk'],
+    ['name' => 'Chair'],
+];
+
+$array = ArrayHelper::sort($array, function ($value) {
+    return $value['name'];
+});
+
+/*
+    [
+        ['name' => 'Chair'],
+        ['name' => 'Desk'],
+    ]
+*/
+```
+------
+
+#####```sortRecursive()```
+
+Recursively sort an array by keys and values:
+```php
+$array = [
+      [
+          'Desc',
+          'Chair',
+      ],
+      [
+          'PHP',
+          'Ruby',
+          'JavaScript',
+      ],
+];
+
+ArrayHelper::sortRecursive($array);
+        
+/*
+  [
+      [
+         'Chair',
+         'Desc',
+      ],
+      [
+         'JavaScript',
+         'PHP',
+         'Ruby',
+      ]
+  ];
+*/
+```
+------
+
 #####```where()```
 
 Filter the array using the given Closure.:
@@ -172,9 +268,21 @@ $value = ArrayHelper::where($array, function($key, $value) {
 ```
 ------
 
-###```xmlStrToArray()```
+#####```xmlStrToArray()```
 
 Convert xml string to array.
+
+```php
+$xml = '<?xml version="1.0"?>
+          <root>
+            <id>1</id>
+            <name>Bob</name>
+          </root>';
+          
+ArrayHelper::xmlStrToArray($xml)
+
+// ['id' => 1, 'name' => 'Bob']
+```
 
 
 ####StringHelper
