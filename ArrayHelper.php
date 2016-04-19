@@ -45,6 +45,18 @@ class ArrayHelper extends BaseArrayHelper
     }
 
     /**
+     * Get the average value of a given key.
+     *
+     * @param $array
+     * @param null $key
+     * @return mixed
+     */
+    public static function average($array, $key = null)
+    {
+        return Collection::make($array)->avg($key);
+    }
+
+    /**
      * Collapse an array of arrays into a single array.
      *
      * @param  array $array
@@ -197,7 +209,7 @@ class ArrayHelper extends BaseArrayHelper
 
         return true;
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -368,6 +380,41 @@ class ArrayHelper extends BaseArrayHelper
         }
 
         $array[array_shift($keys)] = $value;
+
+        return $array;
+    }
+
+    /**
+     * Sort the array using the given callback.
+     *
+     * @param  array $array
+     * @param  Closure $callback
+     * @return array
+     */
+    public static function sort($array, Closure $callback)
+    {
+        return Collection::make($array)->sortBy($callback)->all();
+    }
+
+    /**
+     * Recursively sort an array by keys and values.
+     *
+     * @param  array $array
+     * @return array
+     */
+    public static function sortRecursive($array)
+    {
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                $value = static::sortRecursive($value);
+            }
+        }
+
+        if (static::isAssociative($array)) {
+            ksort($array);
+        } else {
+            sort($array);
+        }
 
         return $array;
     }
