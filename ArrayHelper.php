@@ -197,6 +197,17 @@ class ArrayHelper extends BaseArrayHelper
 
         return true;
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public static function getValue($array, $key, $default = null)
+    {
+        if ($key === null) {
+            return $array;
+        }
+        return parent::getValue($array, $key, $default);
+    }
 
     /**
      * Return the first element in an array passing a given truth test.
