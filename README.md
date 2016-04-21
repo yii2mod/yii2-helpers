@@ -31,13 +31,14 @@ Available Methods
 7. **[flatten()](#flatten)**
 8. **[last()](#last)**
 9. **[only()](#only)**
-10. **[prepend()](#prepend)**
-11. **[pull()](#pull)**
-12. **[set()](#set)**
-13. **[sort()](#sort)**
-14. **[sortRecursive()](#sortrecursive)**
-15. **[where()](#where)**
-16. **[xmlStrToArray()](#xmlstrtoarray)**
+11. **[pluck()](#pluck)**
+12. **[prepend()](#prepend)**
+13. **[pull()](#pull)**
+14. **[set()](#set)**
+15. **[sort()](#sort)**
+16. **[sortRecursive()](#sortrecursive)**
+17. **[where()](#where)**
+18. **[xmlStrToArray()](#xmlstrtoarray)**
 
 Method Listing
 -------------------
@@ -171,6 +172,28 @@ $array = ['one', 'two', 'three', 'four'];
 $array = ArrayHelper::prepend($array, 'zero');
 
 // $array: ['zero', 'one', 'two', 'three', 'four']
+```
+------
+
+#####```pluck()```
+
+The function retrieves all of the collection values for a given key:
+```php
+$array = [
+   ['product_id' => 'prod-100', 'name' => 'Desk'],
+   ['product_id' => 'prod-200', 'name' => 'Chair'],
+];
+
+
+$plucked = ArrayHelper::pluck($array, 'name');
+
+// ['Desk', 'Chair']
+```
+You may also specify how you wish the resulting collection to be keyed:
+```php
+$plucked = ArrayHelper::pluck($array, 'name', 'product_id');
+
+// ['prod-100' => 'Desk', 'prod-200' => 'Chair']
 ```
 ------
 
