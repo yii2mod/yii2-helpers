@@ -1,5 +1,8 @@
-# Yii2 Helpers
+Yii2 Helpers
+============
 This extension is a collection of useful helper functions for Yii Framework 2.0. 
+
+[![Latest Stable Version](https://poser.pugx.org/yii2mod/yii2-helpers/v/stable)](https://packagist.org/packages/yii2mod/yii2-helpers) [![Total Downloads](https://poser.pugx.org/yii2mod/yii2-helpers/downloads)](https://packagist.org/packages/yii2mod/yii2-helpers) [![License](https://poser.pugx.org/yii2mod/yii2-helpers/license)](https://packagist.org/packages/yii2mod/yii2-helpers)
 
 Installation
 ------------
