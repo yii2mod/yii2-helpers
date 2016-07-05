@@ -312,5 +312,5 @@ ArrayHelper::xmlStrToArray($xml)
 
 
 ####StringHelper
-* ```StringHelper::removeStopWords();``` - remove stop words from string
-* ```StringHelper::removePunctuationSymbols();``` - Remove punctuation symbols from string
+* ```StringHelper::removeStopWords('some text');``` - remove stop words from string
+* ```StringHelper::removePunctuationSymbols('some text');``` - Remove punctuation symbols from string
