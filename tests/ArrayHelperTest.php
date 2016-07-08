@@ -187,4 +187,18 @@ class ArrayHelperTest extends TestCase
 
         $this->assertEquals(['id' => 1, 'name' => 'Bob'], ArrayHelper::xmlStrToArray($xml));
     }
+
+    public function testXmlWithAttributesToArray()
+    {
+        $xml = '<?xml version="1.0"?><root><PackageDimensions><Weight Units="hundredths-pounds">57</Weight></PackageDimensions></root>';
+
+        $this->assertEquals(['PackageDimensions' => [
+            'Weight' => [
+                '@content' => '57',
+                '@attributes' => [
+                    'Units' => 'hundredths-pounds'
+                ]
+            ]
+        ]], ArrayHelper::xmlStrToArray($xml));
+    }
 }
