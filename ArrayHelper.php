@@ -85,7 +85,7 @@ class ArrayHelper extends BaseArrayHelper
      */
     protected static function domNodeToArray(DOMNode $node)
     {
-        $output = array();
+        $output = [];
         if (!isset($node->nodeType)) return $output;
         switch ($node->nodeType) {
             case XML_CDATA_SECTION_NODE:
@@ -101,12 +101,15 @@ class ArrayHelper extends BaseArrayHelper
                         $tExploded = explode(':', $t);
                         $t = isset($tExploded[1]) ? $tExploded[1] : $t;
                         if (!isset($output[$t])) {
-                            $output[$t] = array();
+                            $output[$t] = [];
                         }
                         $output[$t][] = $v;
-                    } elseif (false !== $v && "" !== $v) {
+                    } elseif ($v || $v === '0') {
                         $output = (string)$v;
                     }
+                }
+                if ($node->attributes->length && !is_array($output)) { // Has attributes but isn't an array
+                    $output = ['@content' => $output]; // Change output into an array.
                 }
                 if (is_array($output)) {
                     if ($node->attributes->length) {
