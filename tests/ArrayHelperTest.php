@@ -2,11 +2,11 @@
 
 namespace yii2mod\helpers\tests;
 
-use Yii;
 use yii2mod\helpers\ArrayHelper;
 
 /**
  * Class ArrayHelperTest
+ *
  * @package yii2mod\helpers\tests
  */
 class ArrayHelperTest extends TestCase
@@ -170,7 +170,7 @@ class ArrayHelperTest extends TestCase
 
     public function testWhere()
     {
-        $array = ["100", 200, "300"];
+        $array = ['100', 200, '300'];
         $value = ArrayHelper::where($array, function ($key, $value) {
             return is_string($value);
         });
@@ -196,9 +196,9 @@ class ArrayHelperTest extends TestCase
             'Weight' => [
                 '@content' => '57',
                 '@attributes' => [
-                    'Units' => 'hundredths-pounds'
-                ]
-            ]
+                    'Units' => 'hundredths-pounds',
+                ],
+            ],
         ]], ArrayHelper::xmlStrToArray($xml));
     }
 }

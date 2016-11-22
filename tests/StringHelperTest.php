@@ -2,12 +2,11 @@
 
 namespace yii2mod\helpers\tests;
 
-use Yii;
-use yii2mod\helpers\ArrayHelper;
 use yii2mod\helpers\StringHelper;
 
 /**
  * Class StringHelperTest
+ *
  * @package yii2mod\helpers\tests
  */
 class StringHelperTest extends TestCase

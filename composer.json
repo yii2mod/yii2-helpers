@@ -2,7 +2,11 @@
     "name": "yii2mod/yii2-helpers",
     "description": "Collection of useful helper functions for Yii Framework 2.0",
     "type": "yii2-extension",
-    "keywords": ["yii2", "extension"],
+    "keywords": [
+        "yii2",
+        "yii2 helpers",
+        "yii2 array helpers"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -13,6 +17,9 @@
     "require": {
         "yiisoft/yii2": ">=2.0.5",
         "yii2mod/collection": "*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "~1.7"
     },
     "autoload": {
         "psr-4": {

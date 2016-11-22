@@ -15,11 +15,11 @@ use yii2mod\collection\Collection;
  */
 class ArrayHelper extends BaseArrayHelper
 {
-
     /**
      * Determine whether the given value is array accessible.
      *
      * @param  mixed $value
+     *
      * @return bool
      */
     public static function accessible($value)
@@ -33,6 +33,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param  array $array
      * @param  string $key
      * @param  mixed $value
+     *
      * @return array
      */
     public static function add($array, $key, $value)
@@ -49,6 +50,7 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param $array
      * @param null $key
+     *
      * @return mixed
      */
     public static function average($array, $key = null)
@@ -60,6 +62,7 @@ class ArrayHelper extends BaseArrayHelper
      * Collapse an array of arrays into a single array.
      *
      * @param  array $array
+     *
      * @return array
      */
     public static function collapse($array)
@@ -81,12 +84,15 @@ class ArrayHelper extends BaseArrayHelper
 
     /**
      * @param DOMNode $node
+     *
      * @return array|string
      */
     protected static function domNodeToArray(DOMNode $node)
     {
         $output = [];
-        if (!isset($node->nodeType)) return $output;
+        if (!isset($node->nodeType)) {
+            return $output;
+        }
         switch ($node->nodeType) {
             case XML_CDATA_SECTION_NODE:
             case XML_TEXT_NODE:
@@ -113,7 +119,7 @@ class ArrayHelper extends BaseArrayHelper
                 }
                 if (is_array($output)) {
                     if ($node->attributes->length) {
-                        $a = array();
+                        $a = [];
                         foreach ($node->attributes as $attrName => $attrNode) {
                             $a[$attrName] = (string)$attrNode->value;
                         }
@@ -127,6 +133,7 @@ class ArrayHelper extends BaseArrayHelper
                 }
                 break;
         }
+
         return $output;
     }
 
@@ -135,6 +142,7 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param  array $array
      * @param  array|string $keys
+     *
      * @return array
      */
     public static function except($array, $keys)
@@ -149,7 +157,6 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param  array $array
      * @param  array|string $keys
-     * @return void
      */
     public static function forget(&$array, $keys)
     {
@@ -186,6 +193,7 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param  \ArrayAccess|array $array
      * @param  string $key
+     *
      * @return bool
      */
     public static function has($array, $key)
@@ -221,6 +229,7 @@ class ArrayHelper extends BaseArrayHelper
         if ($key === null) {
             return $array;
         }
+
         return parent::getValue($array, $key, $default);
     }
 
@@ -230,6 +239,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param  array $array
      * @param  Closure $callback
      * @param  mixed $default
+     *
      * @return mixed
      */
     public static function first($array, $callback = null, $default = null)
@@ -243,6 +253,7 @@ class ArrayHelper extends BaseArrayHelper
                 return $value;
             }
         }
+
         return static::value($default);
     }
 
@@ -251,6 +262,7 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param  array $array
      * @param  int $depth
+     *
      * @return array
      */
     public static function flatten($array, $depth = INF)
@@ -282,6 +294,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param $array
      * @param $callback
      * @param null $default
+     *
      * @return mixed
      */
     public static function last($array, $callback = null, $default = null)
@@ -293,12 +306,12 @@ class ArrayHelper extends BaseArrayHelper
         return static::first(array_reverse($array), $callback, $default);
     }
 
-
     /**
      * Get a subset of the items from the given array.
      *
      * @param  array $array
      * @param  array|string $keys
+     *
      * @return array
      */
     public static function only($array, $keys)
@@ -312,6 +325,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param  array $array
      * @param  string|array $value
      * @param  string|array|null $key
+     *
      * @return array
      */
     public static function pluck($array, $value, $key = null)
@@ -343,6 +357,7 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param  string|array $value
      * @param  string|array|null $key
+     *
      * @return array
      */
     protected static function explodePluckParameters($value, $key)
@@ -356,6 +371,7 @@ class ArrayHelper extends BaseArrayHelper
 
     /**
      * @param $value
+     *
      * @return mixed
      */
     public static function value($value)
@@ -369,6 +385,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param  array $array
      * @param  mixed $value
      * @param  mixed $key
+     *
      * @return array
      */
     public static function prepend($array, $value, $key = null)
@@ -388,6 +405,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param  array $array
      * @param  string $key
      * @param  mixed $default
+     *
      * @return mixed
      */
     public static function pull(&$array, $key, $default = null)
@@ -407,6 +425,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param  array $array
      * @param  string $key
      * @param  mixed $value
+     *
      * @return array
      */
     public static function set(&$array, $key, $value)
@@ -440,6 +459,7 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param  array $array
      * @param  Closure $callback
+     *
      * @return array
      */
     public static function sort($array, Closure $callback)
@@ -451,6 +471,7 @@ class ArrayHelper extends BaseArrayHelper
      * Recursively sort an array by keys and values.
      *
      * @param  array $array
+     *
      * @return array
      */
     public static function sortRecursive($array)
@@ -475,6 +496,7 @@ class ArrayHelper extends BaseArrayHelper
      *
      * @param  array $array
      * @param  Closure $callback
+     *
      * @return array
      */
     public static function where($array, Closure $callback)
@@ -494,6 +516,7 @@ class ArrayHelper extends BaseArrayHelper
      * @param $xmlString
      * @param bool $tagName
      * @param bool $elementCount
+     *
      * @return array
      */
     public static function xmlStrToArray($xmlString, $tagName = false, $elementCount = false)
@@ -517,7 +540,7 @@ class ArrayHelper extends BaseArrayHelper
         } else {
             $result = self::domNodeToArray($doc->documentElement);
         }
+
         return $result;
     }
-
 }
