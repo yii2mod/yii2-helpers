@@ -525,7 +525,7 @@ class ArrayHelper extends BaseArrayHelper
         try {
             $doc->loadXML($xmlString);
         } catch (Exception $exc) {
-            return false;
+            return [];
         }
         $result = [];
 
